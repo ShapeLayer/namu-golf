@@ -59,7 +59,6 @@ export class Game {
     try {
       const path = await this.generatePath(depth, gen);
       if (gen !== this.generation) return;
-      console.info(`[namu-golf] 정답 경로 (${depth}단계):`, path.join(" → "));
       const from = path[0]!;
       const to = path[path.length - 1]!;
       const afterLoad = this.frame.go(docHref(from));

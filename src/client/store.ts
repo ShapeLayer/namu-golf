@@ -4,9 +4,9 @@ export type Phase = "idle" | "generating" | "playing" | "won" | "gaveup";
 export type DifficultyKey = "easy" | "normal" | "hard" | "custom";
 
 export const DIFFICULTIES: Record<Exclude<DifficultyKey, "custom">, { label: string; depth: number }> = {
-  easy: { label: "쉬움", depth: 5 },
-  normal: { label: "기본", depth: 7 },
-  hard: { label: "어려움", depth: 10 },
+  easy: { label: "쉬움", depth: 4 },
+  normal: { label: "기본", depth: 5 },
+  hard: { label: "어려움", depth: 7 },
 };
 
 export interface GameState {

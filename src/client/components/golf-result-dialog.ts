@@ -1,6 +1,7 @@
 /** 도달/포기 시 결과와 정답 경로를 보여주는 다이얼로그. */
 import { StoreElement, esc, formatTime } from "./base";
 import type { GameState } from "../store";
+import { gradeResult } from "../result-grade";
 
 class GolfResultDialog extends StoreElement {
   private shownFor: string | null = null;
@@ -57,8 +58,14 @@ class GolfResultDialog extends StoreElement {
     const won = state.phase === "won";
     this.q("#title").textContent = won ? "목표 문서에 도달했습니다!" : "포기했습니다";
     const badge = this.q<HTMLElement>("#badge");
-    badge.setAttribute("tone", won ? "green" : "red");
-    badge.textContent = won ? "성공" : "포기";
+    if (won) {
+      const result = gradeResult(state.moves, Math.max(0, state.answerPath.length - 1));
+      badge.setAttribute("tone", result.tone);
+      badge.textContent = result.grade;
+    } else {
+      badge.setAttribute("tone", "red");
+      badge.textContent = "포기";
+    }
     this.q("#moves").textContent = `${state.moves}회`;
     this.q("#time").textContent = formatTime(state.elapsedMs);
     this.q("#depth").textContent = `${Math.max(0, state.answerPath.length - 1)}단계`;

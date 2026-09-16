@@ -154,6 +154,7 @@ export function createHandler(upstreamOrigin = UPSTREAM, revision = REVISION): (
             userAgent: req.headers.get("user-agent") ?? undefined,
             acceptLanguage: req.headers.get("accept-language") ?? undefined,
           });
+          console.info(`[challenge] 정답 경로 (${depth}단계):`, challenge.answerPath.join(" → "));
           return Response.json(challenge, { headers: { "cache-control": "no-store" } });
         } catch (error) {
           console.error(`[challenge] ${depth}단계 생성 실패:`, error);
