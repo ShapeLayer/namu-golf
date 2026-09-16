@@ -1,0 +1,21 @@
+{
+  "name": "namu-golf",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun run server.ts",
+    "dev": "bun --watch run server.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "bun run scripts/build.ts",
+    "test": "bun test",
+    "test:manual": "bun run scripts/manual-test.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.0",
+    "typescript": "^5.6.0"
+  },
+  "dependencies": {
+    "linkedom": "^0.18.13"
+  }
+}

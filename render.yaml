@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: namu-golf
+    runtime: docker
+    plan: free
+    healthCheckPath: /__golf/health
+    envVars:
+      - key: NODE_ENV
+        value: production
