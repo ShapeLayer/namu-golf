@@ -5,7 +5,7 @@
  * - 부모가 직접 호출할 수 있는 동기 API(window.__namuGolf)를 노출한다.
  */
 import { isChallengeDocument } from "../shared/challenge";
-import { docTitleFromPath, isPlayableTitle } from "../shared/wiki";
+import { docTitleFromPath, isPlayableTitle, isSameDocumentFragment } from "../shared/wiki";
 import { BRIDGE_MARK, type BlockReason, type BridgeApi, type BridgeEvent, type NavKind, type PageInfo } from "../shared/protocol";
 
 if (window.parent !== window) install();
@@ -53,8 +53,9 @@ function install(): void {
       block("not-doc", rawHref);
       return;
     }
-    // 같은 문서 안의 앵커(#s-1 등)는 페이지 이동이 아니므로 자유롭게 허용한다.
-    if (url.origin === location.origin && url.pathname === location.pathname && url.hash) return;
+    // 같은 문서 안의 앵커(#, #s-1 등)는 페이지 이동이 아니므로 자유롭게 허용한다.
+    // URL.hash는 빈 프래그먼트인 `#`를 빈 문자열로 돌려주므로 원본 href도 함께 본다.
+    if (isSameDocumentFragment(rawHref, location.href)) return;
     const content = contentRoot();
     if (!content || !content.root.contains(anchor) || content.titleBlock.contains(anchor)) {
       block("outside-content", url.href);

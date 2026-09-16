@@ -1,6 +1,6 @@
 /** 게임 엔진: 문제 생성(랜덤 워크), 이동 판정, 타이머. */
 import type { BridgeEvent, ChallengePayload } from "../shared/protocol";
-import { docHref, docTitleFromPath, isPlayableTitle } from "../shared/wiki";
+import { docHref, docTitleFromPath, isPlayableTitle, isSameDocumentFragment } from "../shared/wiki";
 import { NavigationCancelledError, type WikiFrame } from "./frame";
 import { depthOf, type GameStore } from "./store";
 
@@ -180,6 +180,10 @@ export class Game {
   private onBridge(event: BridgeEvent): void {
     if (event.type === "blocked") {
       if (this.store.state.phase === "playing") {
+        // 브리지보다 먼저 등록된 사이트 핸들러 등에서 같은 문서의 바로가기가
+        // blocked로 전달되더라도 실제 문서 이동이 아니므로 점수에 반영하지 않는다.
+        const currentHref = this.frame.pageInfo()?.href;
+        if (event.reason === "outside-content" && currentHref && isSameDocumentFragment(event.href, currentHref)) return;
         const reasons: Record<typeof event.reason, string> = {
           external: "외부 링크는 이용할 수 없습니다.",
           namespace: "분류·틀 등 특수 문서로는 이동할 수 없습니다.",

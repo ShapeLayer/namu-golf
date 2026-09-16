@@ -31,6 +31,20 @@ export function docHref(title: string): string {
   return "/w/" + encodeURIComponent(title).replace(/%2F/gi, "/").replace(/%3A/gi, ":");
 }
 
+/** `#` 조각만 지정해 현재 문서 안에서 이동하는 링크인지. 빈 조각(`href="#"`)도 포함한다. */
+export function isSameDocumentFragment(href: string, base: string): boolean {
+  if (!href.includes("#")) return false;
+  try {
+    const target = new URL(href, base);
+    const current = new URL(base);
+    return target.origin === current.origin &&
+      target.pathname === current.pathname &&
+      target.search === current.search;
+  } catch {
+    return false;
+  }
+}
+
 /** 같은 출처의 `/w/` 일반 문서 링크면 제목을, 아니면 null을 돌려준다. */
 export function playableTitleFromHref(href: string, base: string): string | null {
   let url: URL;

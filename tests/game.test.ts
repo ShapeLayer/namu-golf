@@ -29,7 +29,9 @@ test("generated path navigation uses a full load instead of a synthetic SPA clic
 });
 
 test("clicking a link outside document content adds two moves and stays on the current page", () => {
-  const frame = Object.assign(new EventTarget(), {}) as unknown as WikiFrame;
+  const frame = Object.assign(new EventTarget(), {
+    pageInfo: () => ({ href: "http://localhost/w/현재%20문서", pathname: "/w/현재%20문서", heading: "현재 문서", linkCount: 1 }),
+  }) as unknown as WikiFrame;
   const state = {
     phase: "playing",
     challenge: false,
@@ -51,4 +53,33 @@ test("clicking a link outside document content adds two moves and stays on the c
   expect(state.moves).toBe(6);
   expect(state.current).toBe("현재 문서");
   expect(state.route).toEqual(["현재 문서"]);
+});
+
+test("same-document fragment shortcuts do not add the outside-content penalty", () => {
+  const frame = Object.assign(new EventTarget(), {
+    pageInfo: () => ({ href: "http://localhost/w/현재%20문서", pathname: "/w/현재%20문서", heading: "현재 문서", linkCount: 1 }),
+  }) as unknown as WikiFrame;
+  const state = {
+    phase: "playing",
+    challenge: false,
+    moves: 4,
+    current: "현재 문서",
+    route: ["현재 문서"],
+  };
+  const store = {
+    state,
+    set(patch: Partial<typeof state>) { Object.assign(state, patch); },
+  } as unknown as GameStore;
+  const game = new Game(store, frame);
+  let notified = false;
+  (game as unknown as { notify(message: string): void }).notify = () => { notified = true; };
+
+  frame.dispatchEvent(new CustomEvent("bridge", {
+    detail: { type: "blocked", reason: "outside-content", href: "http://localhost/w/현재%20문서#" },
+  }));
+
+  expect(state.moves).toBe(4);
+  expect(state.current).toBe("현재 문서");
+  expect(state.route).toEqual(["현재 문서"]);
+  expect(notified).toBe(false);
 });
