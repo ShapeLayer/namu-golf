@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": { "bun": ">=1.4.4" },
+  "packageManager": "bun@1.4.4",
   "scripts": {
     "start": "bun run server.ts",
     "dev": "bun --watch run server.ts",

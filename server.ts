@@ -1,3 +1,4 @@
+import "./src/server/runtime";
 /**
  * namu golf 서버.
  * - `/`            : 게임 페이지

@@ -1,4 +1,4 @@
-FROM oven/bun:1.3.12 AS build
+FROM oven/bun:1.4.4 AS build
 ARG APP_REVISION=unknown
 WORKDIR /app
 COPY package.json bun.lock ./
@@ -7,7 +7,7 @@ COPY . .
 RUN printf '%s\n' "$APP_REVISION" > .revision
 RUN bun run typecheck && bun test && bun run build
 
-FROM oven/bun:1.3.12-slim
+FROM oven/bun:1.4.4-slim
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000

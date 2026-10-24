@@ -1,3 +1,4 @@
+import "../src/server/runtime";
 import { mkdir } from "node:fs/promises";
 await mkdir("dist", { recursive: true });
 for (const [name, entry] of [["app", "src/client/main.ts"], ["bridge", "src/bridge/bridge.ts"]]) {
